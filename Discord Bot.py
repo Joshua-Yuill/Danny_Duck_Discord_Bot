@@ -2,6 +2,7 @@ import discord
 from dadjokes import Dadjoke
 import randfacts
 
+f = open("token.txt", "r")
 
  
 intents = discord.Intents.all()
@@ -27,7 +28,7 @@ async def on_message(message):
         await message.channel.send(dadjoke.joke)
         
     if message.content.startswith('quack' or 'Quack'):
-        await message.channel.send("Quack Quack!")
+        await message.channel.send("**Quack Quack!**")
         
     if message.content.startswith('fact' or 'Fact'):
         fact = randfacts.get_fact()
@@ -35,4 +36,4 @@ async def on_message(message):
         
         
  
-client.run('NDMwNzY0MDk0Mjg3NzczNjk2.GRDsGH.MBKyVQ070CZT8GGoALhj9E01yBb-bazh2PpDh4')
+client.run(f.readline())

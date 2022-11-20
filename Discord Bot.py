@@ -2,7 +2,7 @@ import discord
 from dadjokes import Dadjoke
 import randfacts
 
-f = open("token.txt", "r")
+token = open("token.txt", "r")
 
  
 intents = discord.Intents.all()
@@ -36,4 +36,4 @@ async def on_message(message):
         
         
  
-client.run(f.readline())
+client.run(token.readline())

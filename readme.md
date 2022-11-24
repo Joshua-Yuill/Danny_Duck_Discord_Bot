@@ -1,7 +1,5 @@
 # Danny Duck Python Discord bot
-==================================
-
-## THIS IS A PROTOTYPE UNDER NO CIRCUMSTANCE SHOULD IT BE USED 
+### THIS IS A PROTOTYPE UNDER NO CIRCUMSTANCE SHOULD IT BE USED 
 
 - My first attempt at a python based discord bot
 

@@ -1,13 +1,28 @@
 import interactions
 from dadjokes import Dadjoke
 import randfacts
-import requests
+import math
+import random
+import time
 
+#Bot Authentication Details
 token = open("token.txt", "r")
 
 guild = id
 
 bot = interactions.Client(token=token.readline())
+#===============================================================
+
+#Global Variables
+health = 255
+clean = 255
+happy = 255
+hunger = 255
+
+timeFood = time.time()
+timeClean = time.time()
+timeHappy = time.time()
+timeHealth = time.time()
 
 @bot.command(
     name="help",
@@ -36,10 +51,31 @@ async def help(ctx: interactions.CommandContext):
           "name": "/fact",
           "value": "Use this command to make me say an intresting fact"
         },
-         {
-          "name": "/duck",
-          "value": "Use this command to see an image of a cute duck"
-        }],
+        {
+          "name": "/clean",
+          "value": "Use this command to clean me"
+        },
+        {
+          "name": "/feed",
+          "value": "Use this command to feed me some food"
+        },
+        {
+          "name": "/activity",
+          "value": "Use this command to play a game with me!"
+        },
+        {
+          "name": "/stats",
+          "value": "Use this command to see my statistics, like hunger, happiness and cleanliness"
+        },
+        {
+          "name": "/history",
+          "value": "Use this command to see who most recently fed, cleaned and played with me"
+        },
+        {
+          "name": "/attribution",
+          "value": "Use this command to see who made this bot possible"
+        },
+        ],
     thumbnail={
         "url": "https://cdn.discordapp.com/attachments/804177032137146429/1044011439049941093/IMG_0929.jpg",
         "height": 0,
@@ -102,24 +138,116 @@ async def joke(ctx: interactions.CommandContext):
 
 
 @bot.command(
-    name="duck",
-    description="I will show you an image of a duck",
+    name="stats",
+    description="See my stats",
     scope=guild,
 )
 
 async def help(ctx: interactions.CommandContext):
-    duck = "https://random-d.uk/api/randomimg"
+  
+    foodEffect = (time.time() - timeFood)
+    cleanEffect = (time.time() - timeClean)
+    happyEffect = (time.time() - timeHappy)
+    healthEffect = (time.time() - timeHealth)
+    thumb = ""
+    
+    if int(((health-healthEffect)/255)*100) < 1:
+      healthColour = interactions.Color().black
+      thumb = "https://cdn.discordapp.com/attachments/815712795344764938/1045455508041117807/istockphoto-1148649898-612x612.jpg"
+    
+    elif int(((health-healthEffect)/255)*100) < 15:
+      healthColour = interactions.Color().red
+      thumb = "https://cdn.discordapp.com/attachments/804177032137146429/1044011439049941093/IMG_0929.jpg"
+      
+    elif int(((health-healthEffect)/255)*100) < 70:
+      healthColour = interactions.Color().yellow
+      thumb = "https://cdn.discordapp.com/attachments/804177032137146429/1044011439049941093/IMG_0929.jpg"
+    
+    else:    
+      healthColour = interactions.Color().green
+      thumb = "https://cdn.discordapp.com/attachments/804177032137146429/1044011439049941093/IMG_0929.jpg"
+
+    
     embed = interactions.Embed(
-    image={
-        "url": duck,
-        "height": 0,
-        "width": 0
+    fields=[
+      {
+        "name": "**Health**",
+        "value": str(math.trunc(((health-healthEffect)/255)*100))+"%",
+        "inline": True
       },
+      {
+        "name": "**Happiness**",
+        "value": str(math.trunc(((happy-happyEffect)/255)*100))+"%",
+        "inline": True
+      },
+      {
+        "name": "**Cleanliness**",
+        "value": str(math.trunc(((clean-cleanEffect)/255)*100))+"%",
+        "inline": True
+      },
+      {
+        "name": "**Hunger**",
+        "value": str(math.trunc(((hunger-foodEffect)/255)*100))+"%",
+        "inline": True
+      },
+      ],
+    author={
+        "name": "Stats:"},
     footer={
-        "text": "Powered by random-d.uk"
+        "text": ""
+    },
+    thumbnail={
+        "url": thumb,
+        "height": 0,
+        "width": 0,
       },
+    color=healthColour,)
+    await ctx.send(embeds=embed)
+    
+    
+@bot.command(
+    name="feed",
+    description="Feed me!",
+    scope=guild,
+)
+
+async def feed(ctx: interactions.CommandContext):
+    global timeFood
+    timeFood = time.time()
+    embed = interactions.Embed(
+    title="Yum Yum!",
     color=interactions.Color().yellow,)
     await ctx.send(embeds=embed)
+    
+@bot.command(
+    name="clean",
+    description="Clean me!",
+    scope=guild,
+)
+
+async def feed(ctx: interactions.CommandContext):
+    global timeClean
+    timeClean = time.time()
+    embed = interactions.Embed(
+    title="Scrub-a-dub!",
+    color=interactions.Color().yellow,)
+    await ctx.send(embeds=embed)
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
 
 @bot.command(
@@ -135,8 +263,12 @@ async def help(ctx: interactions.CommandContext):
     description="With thanks to:",
     fields=[
         {
+          "name": "Terrorfusion",
+          "value": "For conceptulisation and support"
+        },
+        {
           "name": "Duck Images",
-          "value": "  https://random-d.uk/\n"
+          "value": "https://random-d.uk/\n"
         },
         {
           "name": "Dad Jokes",
@@ -145,7 +277,7 @@ async def help(ctx: interactions.CommandContext):
         {
           "name": "Random Facts",
           "value": "https://pypi.org/project/randfacts/"
-        }
+        },
       ],
     color=interactions.Color().yellow,)
     await ctx.send(embeds=embed)
